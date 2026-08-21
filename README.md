@@ -27,6 +27,38 @@ about the outcome we're trying to predict.
 ## Results
 See `model_comparison.csv` and `threshold_analysis.csv`.
 
+## Nigerian Context Adaptation
+
+This project uses a public US-centric credit dataset (Kaggle, CC0) as the
+closest available proxy for individual credit-risk modeling, since no
+open, purpose-built micro-lending dataset for the Nigerian market currently
+exists. To adapt this approach for a real Nigerian micro-lender, the
+following changes would be needed:
+
+- **Credit history proxy**: `cb_person_cred_hist_length` (years of formal
+  credit history) has limited relevance for many Nigerian borrowers who
+  are financially included but credit-invisible. A real deployment would
+  substitute mobile money transaction history (e.g. Opay, PalmPay, Moniepoint),
+  BVN-linked repayment records, or cooperative/thrift (ajo/esusu) contribution
+  history as alternative signals of repayment reliability.
+- **Income representation**: Income here is a raw USD figure; a Nigerian
+  version would use NGN-denominated income bands and account for informal,
+  irregular, or seasonal income common among small traders and artisans,
+  rather than assuming steady formal-sector pay.
+- **Employment/housing categories**: `person_home_ownership` (RENT/OWN/
+  MORTGAGE) reflects US housing finance norms. A Nigerian equivalent would
+  need categories reflecting informal employment (trading, artisanal work,
+  gig income) and housing arrangements (family house, informal rental)
+  more common locally.
+- **Loan sizing**: Loan amounts in this dataset (thousands of USD) are
+  far larger than typical Nigerian micro-loans (often ₦20,000–₦500,000).
+  A production model would need to be retrained on locally scaled amounts.
+
+The modeling approach — leakage-aware feature selection, threshold-based
+risk banding, and SHAP-based explainability — is directly transferable;
+only the underlying data and feature definitions would need to be
+Nigeria-specific.
+
 ## Important Disclaimer
 This model outputs a **risk estimate**, not a lending decision. Real-world
 deployment requires human review, regulatory compliance, affordability
